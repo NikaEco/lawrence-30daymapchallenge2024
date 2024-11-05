@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState, useEffect } from 'react'
 
 const mapChallengeData = [
   { date: "01-11-2024", name: "Points", description: "A map with points. Start the challenge with points. Show individual locations—anything from cities to trees or more abstract concepts.", emoji: "📍", linkedinLink: "https://www.linkedin.com/posts/xdl_30daymapchallenge-python-activity-7258133127242358784-nWth?utm_source=share&utm_medium=member_desktop" },

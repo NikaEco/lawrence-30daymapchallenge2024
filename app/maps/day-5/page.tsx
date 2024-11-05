@@ -96,7 +96,6 @@ export default function Home() {
   const [time, setTime] = useState(0);
   const [animation, setAnimation] = useState<{ id?: number }>({});
   const [currentMapStyle, setCurrentMapStyle] = useState(0);
-  const [credits, setCredits] = useState('');
 
   const animate = () => {
     const loopLength = F1_COORDINATES.length;
@@ -128,7 +127,6 @@ export default function Home() {
             const {copyright} = tile.content.gltf.asset;
             copyright.split(';').forEach(uniqueCredits.add, uniqueCredits);
           });
-          setCredits([...uniqueCredits].join('; '));
           return selectedTiles;
         };
       },

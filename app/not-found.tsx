@@ -13,8 +13,8 @@ const NotFound = () => {
         <div className="h-px bg-gray-200 w-full my-6" />
         
         <p className="text-gray-600 text-lg">
-          Oops! Looks like you've ventured into uncharted territory.
-          While you're here, why not check out Lawrence's latest posts?
+          Oops! Looks like you&apos;ve ventured into uncharted territory.
+          While you&apos;re here, why not check out Lawrence&apos;s latest posts?
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">

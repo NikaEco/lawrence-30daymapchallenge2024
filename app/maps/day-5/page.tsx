@@ -223,9 +223,9 @@ export default function Home() {
       </div>
 
        {/* return button */}
-       <div className="absolute top-4 right-4 bg-black/70 text-white p-4 rounded">
+       <div className="absolute top-4 left-4 bg-black/70 text-white p-4 rounded">
         <Link href='/'>
-          Homepage
+          ⬅️ Homepage
         </Link>
       </div>
 

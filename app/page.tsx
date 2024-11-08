@@ -93,7 +93,7 @@ export default function Dashboard() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Nika's 30 Day Map Challenge 2024
+            Nika&apos;s 30 Day Map Challenge 2024
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Join Lawrence 

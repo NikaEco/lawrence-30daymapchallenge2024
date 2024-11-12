@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import DeckGL from '@deck.gl/react';
 import { TileLayer } from '@deck.gl/geo-layers';
 import { Map as MaplibreGL } from 'react-map-gl/maplibre';
@@ -33,14 +33,6 @@ const INITIAL_VIEW_STATE = {
   pitch: 0,
   bearing: 0
 };
-
-interface TileLayerState {
-  layer: TileLayer;
-  isFullyLoaded: boolean;
-  loadedTiles: number;
-  totalTiles: number;
-  url: string;
-}
 
 interface Histogram {
   counts: number[];
@@ -92,37 +84,7 @@ interface COGTilesProps {
 const START_YEAR = 1984;
 const END_YEAR = 2023;
 
-export async function fetchTileBounds(url: string) {
-  const response = await fetch(
-      `${process.env.NEXT_PUBLIC_RASTER_SERVER}/cog/info?url=${encodeURIComponent(url)}`,
-  );
-
-  if (!response.ok) {
-      throw new Error(`Failed to fetch tile info: ${response.statusText}`);
-  }
-
-  const { bounds } = await response.json();
-  return bounds;
-}
-
-// TODO @lawrencenikae check if this preview will be useful with users.
-// TODO Apparently first time calling this preview it will take 12 seconds to get preview for a 300MB COG, not instant.
-export async function fetchTilePreview(url: string, rescaleParam?: string) {
-  const response = await fetch(
-      `${process.env.NEXT_PUBLIC_RASTER_SERVER}/cog/preview?url=${encodeURIComponent(url)}${rescaleParam}`,
-  );
-
-  if (!response.ok) {
-      console.error(`Failed to fetch tile preview: ${response.statusText}`);
-      return;
-  }
-
-  const imageBlob = await response.blob();
-
-  return imageBlob;
-}
-
-export async function fetchTileStatistics(
+async function fetchTileStatistics(
   url: string,
   props: Record<string, string> = {},
 ) {
@@ -149,7 +111,7 @@ export async function fetchTileStatistics(
   return stats;
 }
 
-function isEmptyValue(value: any): boolean {
+function isEmptyValue(value: string | number | boolean | string[] | [number, number][]): boolean {
   return (
       value === null ||
       value === undefined ||
@@ -159,7 +121,7 @@ function isEmptyValue(value: any): boolean {
 }
 
 // This function is created to create an url string that follows /cog/tiles endpoint from Titiler at https://developmentseed.org/titiler/endpoints/cog/#tiles
-export function createTitilerUrl(props: Partial<COGTilesProps>): string {
+function createTitilerUrl(props: Partial<COGTilesProps>): string {
   const urlSearchParams = new URLSearchParams();
 
   Object.entries(props).forEach(([key, value]) => {
@@ -212,42 +174,6 @@ export function createTitilerUrl(props: Partial<COGTilesProps>): string {
   return `${process.env.NEXT_PUBLIC_RASTER_SERVER}/cog/tiles/WebMercatorQuad/{z}/{x}/{y}.png?${urlSearchParams.toString()}`;
 }
 
-const getTileUrl = async (year: number) => {
-  const gcsPath = `gs://planetgpt/50ae81ce-deac-45a1-a5b8-70af7615a39d/amazon_river_bend_landsat/landsat_${year}/LANDSAT_LT05_${year}_SWIR_NIR_RED_enhanced.tif`
-
-  // const bounds = await fetchTileBounds(gcsPath);
-  // console.log(bounds) // used to set to extent field of TileLayer to avoid loading tiles beyond this bound
-  const stats = await fetchTileStatistics(gcsPath);
-
-  const bands = Object.keys(stats) || [];
-  if (bands.length === 0)
-      throw Error('There is no band in the raster imagey!');
-
-  // default to 3 channels for image with >= 3 bands
-  const selectedBands =
-      bands.length >= 3 ? bands.slice(0, 3) : bands.slice(0, 1);
-
-  // default to no recale for RGB image as titiler can show them without rescale
-  const rescale: [number, number][] =
-      bands.length >= 3
-          ? [
-                [stats[bands[0]].min, stats[bands[0]].max],
-                [stats[bands[1]].min, stats[bands[1]].max],
-                [stats[bands[2]].min, stats[bands[2]].max],
-            ]
-          : [[stats[bands[0]].min, stats[bands[0]].max]];
-
-  const url = createTitilerUrl({
-      url: gcsPath,
-      bidx: selectedBands,
-      rescale,
-  })
-
-  console.log(url)
-
-  return url;
-};
-
 const MapTimeSeries: React.FC = () => {
   const [currentMapStyle, setCurrentMapStyle] = useState(0);
   const [viewState, setViewState] = useState<MapViewState>(INITIAL_VIEW_STATE);
@@ -256,6 +182,10 @@ const MapTimeSeries: React.FC = () => {
   const [playSpeed] = useState<number>(1000);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [tileUrl, setTileUrl] = useState<string>('');
+
+  const cycleMapStyle = () => {
+    setCurrentMapStyle((prev) => (prev + 1) % MAP_STYLES.length);
+  };
   
   // Create a single reusable layer
   const layer = new TileLayer({
@@ -265,7 +195,7 @@ const MapTimeSeries: React.FC = () => {
     maxZoom: 19,
     tileSize: 256,
     extent: BOUNDS,
-    renderSubLayers: (props: any) => {
+    renderSubLayers: (props) => {
       const { boundingBox } = props.tile;
       return new BitmapLayer(props, {
         // @ts-expect-error TODO fix
@@ -419,6 +349,15 @@ const MapTimeSeries: React.FC = () => {
         ⬅️ Homepage
       </Link>
     </div>
+
+    {/* Map style switcher */}
+    <button
+        onClick={cycleMapStyle}
+        className="absolute bottom-4 left-4 bg-white/90 hover:bg-white text-black px-4 py-2 rounded-lg shadow-lg transition-colors flex items-center space-x-2"
+      >
+        <span className="material-icons text-xl">map</span>
+        <span>{MAP_STYLES[currentMapStyle].name}</span>
+      </button>  
   </main>
   );
 };

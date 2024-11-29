@@ -13,6 +13,7 @@
     "@deck.gl/layers": "^9.0.34",
     "@deck.gl/react": "^9.0.34",
     "deck.gl": "^9.0.34",
+    "duckdb": "^1.1.3",
     "maplibre-gl": "^4.7.1",
     "next": "15.0.2",
     "react": "^18.2.0",

@@ -33,7 +33,7 @@ const mapChallengeData = [
   { date: "27-11-2024", name: "Micromapping", description: "Map something small and precise. Zoom in and map a small area in high detail.", emoji: "🧐🔍", linkedinLink: "https://www.linkedin.com/posts/xdl_30daymapchallenge-lidar-micromapping-activity-7267473249582612482-Wp8b?utm_source=share&utm_medium=member_desktop" },
   { date: "28-11-2024", name: "The blue planet", description: "Map oceans, rivers, and lakes. Focus on water today.", emoji: "🌊🐋", linkedinLink: "https://www.linkedin.com/posts/xdl_30daymapchallenge-oceanography-climatescience-activity-7267924892098916352-mgED?utm_source=share&utm_medium=member_desktop" },
   { date: "29-11-2024", name: "Overture", description: "Use data from the Overture Maps Foundation. Explore data from Overture Maps Foundation to create a map that highlights new geographic datasets.", emoji: "🌍📊", linkedinLink: "https://www.linkedin.com/posts/xdl_30daymapchallenge-opendata-gis-activity-7268298958693634048-AiFa?utm_source=share&utm_medium=member_desktop" },
-  { date: "30-11-2024", name: "The final map", description: "The final challenge—your choice! Revisit a technique from earlier in the month, refine an idea, or try something completely new.", emoji: "🎉🌐", linkedinLink: "" },
+  // { date: "30-11-2024", name: "The final map", description: "The final challenge—your choice! Revisit a technique from earlier in the month, refine an idea, or try something completely new.", emoji: "🎉🌐", linkedinLink: "" },
 ]
 
 function GradientPlaceholder({ day, name, description, emoji }: { day: number; name: string; description: string; emoji: string }) {
